@@ -1,0 +1,13 @@
+.strip{
+    padding:4px;
+    color : white;
+    position : relative;
+}
+
+.hoverPosition{
+    color :black;
+    position: absolute;
+    top: -120px;
+    right: -70px;
+    z-index: 100;
+}

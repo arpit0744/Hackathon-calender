@@ -1,4 +1,104 @@
-Hello
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-basic-title">Add Reminder</h2>
+      <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <input class="form-control" placeholder="Select Reminder Date" (click)="d1.toggle()" type="text" ngbDatepicker #d1="ngbDatepicker"/>
+        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button>
+    </div>
+  </ng-template>
 
-<mat-slider min="1" max="100" step="1" value="50"></mat-slider>
-kkk
+ 
+
+<div class="row text-center">
+    <div class="col-md-4">
+      <div class="btn-group">
+        <div
+          class="btn btn-primary"
+          mwlCalendarPreviousView
+          [view]="view"
+          [(viewDate)]="viewDate"
+        >
+          Previous
+        </div>
+        <div
+          class="btn btn-outline-secondary"
+          mwlCalendarToday
+          [(viewDate)]="viewDate"
+        >
+          Today
+        </div>
+        <div
+          class="btn btn-primary"
+          mwlCalendarNextView
+          [view]="view"
+          [(viewDate)]="viewDate"
+        >
+          Next
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+        <h1>{{ viewDate | calendarDate: view + 'ViewTitle' }}</h1>
+      </div>
+</div>    
+<mwl-calendar-month-view
+ [viewDate]="viewDate"
+ [cellTemplate]="customCellTemplate"
+ >
+</mwl-calendar-month-view>
+<!--<ng-template #customCellTemplate let-day="day" let-locale="locale">
+    {{day.date}}
+    <div class="cal-cell-top">
+      <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+      <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+    </div>
+    <div class="cell-totals">
+      <span
+        *ngFor="let event of events"
+        class="btn-primary">
+        {{ event['title'] }}
+      </span>
+    </div>
+  </ng-template>
+-->
+<ng-template #customCellTemplate let-day="day" let-locale="locale">
+    <div class="cal-cell-top">
+      <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+      <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+    </div>
+    <div class="cell-totals">
+      <ng-container *ngFor="let event of events">
+        
+      <p [class]="getColourCode(event.product_type)" class = "strip" *ngIf="compareDate(day.date, event.start)" (mouseover)="event.isHover=true" (mouseout)="event.isHover=false">
+        
+        <span class = "hoverPosition" *ngIf="event.isHover == true" >
+            <app-product-card [event]="event"></app-product-card>
+        </span>
+
+        {{ event['title'] }} 
+
+
+        <a [href]="event.redirect_url" style="text-decoration: none; color: white;">
+        <span style = "float: right" >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+              </svg>
+        </span>
+        </a>
+        
+        <span *ngIf ="!isPreviousDate(event.start)" style = "float: right; padding-right: 5px;"  (click)="open(content)" >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
+            </svg>
+        </span>
+    </p>
+      </ng-container>
+
+    </div>
+  </ng-template>
